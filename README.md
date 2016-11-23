@@ -40,7 +40,7 @@ dependancies are met), three executable files are created:
 * `brownianTracers-2d` for simulations in dimension 2
 * `brownianTracers-2d-visu` same as the previous one with on-the-fly
 visualization of the system
-* `brownianTracers-3d` for simulations in dimension 2
+* `brownianTracers-3d` for simulations in dimension 3
 
 At the `Makefile` level, this behavior is enable by compilation flags:
 * `-DDIM=d` (with `d` any striclty positive integer) is a mandatory flag
