@@ -5,6 +5,19 @@ The purpose of this program is to simulate the motion of Brownian particles
 interacting via a soft-sphere potential, some of the particles being driven
 by an external force.
 
+The stochastic differential equation that is simulated is  
+&part;<sub>t</sub>**x**<sub>i</sub>(t) =  I(i is tracer)**f** -
+&sum; <sub>j&ne;i</sub>&nabla; <sub>**x**<sub>i</sub></sub>
+V(**x**<sub>i</sub>(t) - **x**<sub>j</sub>(t)) + **&xi;**<sub>i</sub>(t)  
+where **x**<sub>i</sub> is the position of particle i, **f** is the external
+force, V is a soft-sphere potential and **&xi;**<sub>i</sub> is a Gaussian
+white noise with correlation proportional to the temperature T.  
+V(r) = &frac12; &theta;(1 - r) (1 - r)<sup>2</sup>  \[&theta; is the Heaviside
+function\]  
+&lang; &xi;<sub>i</sub><sup>a</sup>(t) &xi;<sub>j</sub><sup>b</sup>(t')
+&rang; = 2T &delta;<sub>ij</sub> &delta;<sup>ab</sup> &delta;(t - t')
+
+
 See [\[Poncet *and al.*, 2016\]](http://arxiv.org/abs/1608.00094) for an
 example of application of this program.
 
