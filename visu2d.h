@@ -56,6 +56,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define WINDOW_SIZE 800
 #define CIRCLE_RADIUS 0.5
 #define FPS 24
+#define FONT_FILE "font.ttf"
 
 // Data structure to be passed to the visualization thread.
 struct DataThreadVisu {

@@ -137,8 +137,8 @@ void initVisu(sf::RenderWindow &window, sf::CircleShape &circle1,
         circle2.setOutlineColor(sf::Color::Blue);
     }
 
-    if (!font.loadFromFile("font.ttf"))
-        cerr << "Error: could not load font from font.ttf." << endl;
+    if (!font.loadFromFile(FONT_FILE))
+        cerr << "Error: could not load font from " << FONT_FILE << endl;
 
     text.setFont(font);
     text.setString("");
