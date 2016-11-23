@@ -61,7 +61,7 @@ int parseAndCheckArguments(int argc, char **argv, Parameters &p) {
     // Command-line only
     po::options_description genericOpts("Command-line only");
     genericOpts.add_options()
-        ("config", po::value<string>(), "Use configuration file")
+        ("config,c", po::value<string>(), "Use configuration file")
         ("verbose,v", po::bool_switch(&p.verbose), "Verbose mode")
         ("help,h", "Print help message and exit")
         ;
@@ -93,6 +93,8 @@ int parseAndCheckArguments(int argc, char **argv, Parameters &p) {
          "Iterations between computations of correlations")
         ("mobility", po::bool_switch(&p.outputMobility), "Output mobility")
         ("correl", po::bool_switch(&p.outputCorrel), "Output correlations")
+        ("livepos", po::value<long>(&p.outputPosIters)->default_value(-1),
+         "Output positions of particles every given number of iterations")
         ("path,p", po::value<string>(&p.path)->default_value(DEFAULT_PATH),
          "Directory to export results")
         ("fileMobility",
@@ -100,6 +102,9 @@ int parseAndCheckArguments(int argc, char **argv, Parameters &p) {
          "File name (without path) for mobility (default format if none)")
         ("fileCorrel", po::value<string>(&p.fnameCorrel)->default_value(""),
          "File name (without path) for correlations (default format if none)")
+        ("filePos", po::value<string>(&p.fnamePos)->default_value(""),
+         "File name (without path and extension) for positions "
+         "(default format if none)")
         ("gzip,z", po::bool_switch(&p.gzip), "Compress output using gzip")
         ;
 
@@ -162,8 +167,9 @@ int checkParameters(const Parameters &p) {
     }
 
 #ifndef VISU2D
-    if (!p.outputMobility && !p.outputCorrel) {
-        cerr << "Warning: you should use either '--mobility' or '--correl'"
+    if (!p.outputMobility && !p.outputCorrel && p.outputPosIters < 1) {
+        cerr << "Warning: you should use either '--mobility', '--correl "
+            "or '--livepos'"
             << endl;
         return 1;
     }

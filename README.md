@@ -57,22 +57,32 @@ and should be made of lines of the type `arg=value` (e.g. `particles=40000` or
 ### Mandatory arguments
 * `--particles` Number of particles of the system
 * `--tracers` Number of tracers (i.e. particles driven by the external force)
-* `--density` Density of the system (1 means on average 1 particle per cube of unit size)
+* `--density` Density of the system (1 means on average 1 particle per cube of
+unit size)
 * `--temperature` Temperature (the mobility being set to 1)
 * `--force` External force (the mobility being set to 1)
 * `--timestep` Time step of the simulation
 * `--iters` Number of iterations of the simulation
-* `--mobility` and/or `--correl` (mandatory only if no visualization)
-Export data for mobility and/or correlations to files
+
+### Export
+If visualization is disabled, it is mandatory to provide at least one of the
+following arguments:
+* `--mobility` Export data for mobility
+* `--correl` Export data for correlations
+* `--livepos` Export positions every given number of iterations 
 
 ### Optional arguments
 * `--thermalization` Number of iterations of thermalization (i.e. without
 external force and withour recording any result) (`default=0`)
 * `--resolution` Resolution for the correlations (`default=0.25`)
 * `--path` Directory in which the files are saved (`default=Results/`)
-* `--fileMobility` (resp. `--fileCorrel`) File name (without directory) for data for mobility (resp. correlations).
-If undefined the file name will be `BT<dimension>d-<day>-<time>-<6randomCharacters>-<mobility|correl>.dat`
+* `--fileMobility` (resp. `--fileCorrel`) File name (without directory)
+for data for mobility (resp. correlations).
+If undefined the file name will be
+`BT<dimension>d-<day>-<time>-<6randomCharacters>-<mobility|correl>.dat`
 (e.g. `BT2d-20150320-102714-sUfrH-mobility.dat`)
+* `--filePos` File name (without directory and extension) for positions
+(default format if not defined)
 * `--gzip` Compress output with gzip format (useful for the
 correlation file if the resolution is small)
 

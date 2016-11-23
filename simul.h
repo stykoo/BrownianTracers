@@ -57,6 +57,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #define DEFAULT_NB_RND_CHAR 6
 #define DEFAULT_OUT_PRECISION 15
+#define DEFAULT_NB_DIGITS 7
 
 int runSimulation(const Parameters &p);
 
@@ -96,8 +97,6 @@ std::vector< std::forward_list<long> > makeNeighborsLists(const long L);
 
 
 // Functions concerning export
-void printPos(const std::vector< std::array<double, DIM> > &pos);
-
 void exportLineMobility(const std::vector< std::array<double, DIM> > &pos,
                         const std::vector< std::array<double, DIM> > &forces,
                         const std::vector< std::array<double, DIM> > &windings,
@@ -114,7 +113,8 @@ void exportCorrel(const std::vector<long long> &countInDivTNT,
 
 // Functions taking care of files
 int openFiles(const Parameters &p, std::ostream *&fileMobility,
-              std::ostream *&fileCorrel, std::mt19937 &rndGen);
+              std::ostream *&fileCorrel, std::string &fullnamePos,
+              std::mt19937 &rndGen);
 
 int openFile(const std::string &fname, std::ostream *&file, bool gzip,
              bool verbose);
@@ -123,9 +123,16 @@ void closeFiles(const Parameters &p, std::ostream *&fileMobility,
                 std::ostream *&fileCorrel);
 
 void genFileNames(const Parameters &p, std::string &fnameMobility,
-                  std::string &fnameCorrel, std::mt19937 &rndGen);
+                  std::string &fnameCorrel, std::string &fnamePos,
+                  std::mt19937 &rndGen);
 
 void writeHeaders(const Parameters &p, std::ostream &fileMobility,
                   std::ostream &fileCorrel);
+
+void writeHeaderPos(const Parameters &p, std::ostream &filePos, const long k);
+
+void exportPos(const Parameters &p,
+               const std::vector< std::array<double,DIM> > &pos,
+               const std::string &fname, const long k);
 
 #endif  // BROWNIANTRACERS_SIMUL_H_

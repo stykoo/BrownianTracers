@@ -90,7 +90,8 @@ int runSimulation(const Parameters &p) {
                                                     * p.timestep));
     // Files for export
     ostream *fileMobility = nullptr, *fileCorrel = nullptr;
-    if(openFiles(p, fileMobility, fileCorrel, rndGen)){
+    string fullnamePos;
+    if(openFiles(p, fileMobility, fileCorrel, fullnamePos, rndGen)){
         return 1;
     }
     writeHeaders(p, *fileMobility, *fileCorrel);
@@ -183,6 +184,10 @@ int runSimulation(const Parameters &p) {
             calcCorrel(positions, countInDivTNT, countInDivTT, p.nbParticles,
                        p.nbTracers, boxLength, nbDivLine);
         }
+        if (p.outputPosIters > 0 && time0 % p.outputPosIters == 0) {
+            exportPos(p, positions, fullnamePos, time0 / p.outputPosIters);
+        }
+
     }
 // End of main loop
 
@@ -420,19 +425,17 @@ void exportCorrel(const vector<long long> &countInDivTNT,
 // Open files for mobility and correlations
 // Use boost::iostreams for gzip compression if needed
 int openFiles(const Parameters &p, ostream *&fileMobility,
-              ostream *&fileCorrel, mt19937 &rndGen) {
-    std::string fnameMobility, fnameCorrel;
-    genFileNames(p, fnameMobility, fnameCorrel, rndGen);
+              ostream *&fileCorrel, string &fullnamePos, mt19937 &rndGen) {
+    std::string fullnameMobility, fullnameCorrel;
+    genFileNames(p, fullnameMobility, fullnameCorrel, fullnamePos, rndGen);
 
     if (p.outputMobility) {
-        if (openFile(fnameMobility, fileMobility, p.gzip, p.verbose))
+        if (openFile(fullnameMobility, fileMobility, p.gzip, p.verbose))
             return 1;
-        fileMobility->precision(DEFAULT_OUT_PRECISION);
     }
     if (p.outputCorrel) {
-        if (openFile(fnameCorrel, fileCorrel, p.gzip, p.verbose))
+        if (openFile(fullnameCorrel, fileCorrel, p.gzip, p.verbose))
             return 1;
-        fileCorrel->precision(DEFAULT_OUT_PRECISION);
     }
 
     return 0;
@@ -466,6 +469,7 @@ int openFile(const string &fname, ostream *&file, bool gzip, bool verbose) {
             cout << fname << " successfully opened" << endl;
         }
     }
+    file->precision(DEFAULT_OUT_PRECISION);
     return 0;
 }
 
@@ -479,8 +483,8 @@ void closeFiles(const Parameters &p, ostream *&fileMobility,
 }
 
 // Generate file names
-void genFileNames(const Parameters &p, std::string &fnameMobility,
-                  std::string &fnameCorrel, std::mt19937 &rndGen) {
+void genFileNames(const Parameters &p, string &fnameMobility,
+                  string &fnameCorrel, string &fnamePos, mt19937 &rndGen) {
     // Defaut file names
     // eg BT2d-20150320-102714-sUfrH-mobility.dat
     ostringstream oss;
@@ -498,6 +502,7 @@ void genFileNames(const Parameters &p, std::string &fnameMobility,
 
     fnameMobility = p.path + "/";
     fnameCorrel = p.path + "/";
+    fnamePos = p.path + "/";
     if (p.fnameMobility.empty()) {
         fnameMobility += oss.str() + "-mobility.dat";
     } else {
@@ -505,6 +510,11 @@ void genFileNames(const Parameters &p, std::string &fnameMobility,
     }
     if (p.fnameCorrel.empty()) {
         fnameCorrel += oss.str() + "-correl.dat";
+    } else {
+        fnameCorrel += p.fnameCorrel;
+    }
+    if (p.fnamePos.empty()) {
+        fnamePos += oss.str() + "-pos";
     } else {
         fnameCorrel += p.fnameCorrel;
     }
@@ -540,12 +550,42 @@ void writeHeaders(const Parameters &p, ostream &fileMobility,
     }
 }
 
-// Print the positions of the particles.
-void printPos(const vector< array<double,DIM> > &pos) {
+// Write header for position file
+void writeHeaderPos(const Parameters &p, ostream &filePos, const long k) {
+    filePos << "# BrownianTracers" << DIM << "d: "
+        << "nbParticles=" << p.nbParticles << ", nbTracers=" << p.nbTracers
+        << ", density=" << p.density << ", temperature=" << p.temperature
+        << ", force=" << p.force << ", timestep=" << p.timestep
+        << ", nbIters=" << p.nbIters << ", nbItersTh=" << p.nbItersTh
+        << ", time=" << k * p.outputPosIters << "\n";
+    filePos << "#";
+    for(int a = 0 ; a < DIM ; a++){
+        filePos << " x" << a + 1;
+    }
+    filePos << endl;
+}
+
+// Export the positions of the particles.
+void exportPos(const Parameters &p, const vector< array<double,DIM> > &pos,
+               const string &fname, const long k) {
+    ostringstream oss;
+    oss << fname << "-" << setfill('0') << setw(DEFAULT_NB_DIGITS) << k
+        << ".dat";
+    if (p.gzip) {
+        oss << ".gz";
+    }
+
+    ostream *filePos;
+    if (openFile(oss.str(), filePos, p.gzip, false))
+        return;
+
+    writeHeaderPos(p, *filePos, k);
     for (long i = 0 ; i < (long) pos.size() ; i++) {
         for (int a = 0 ; a < DIM ; a++) {
-            cout << pos[i][a] << "\t";
+            *filePos << pos[i][a] << "\t";
         }
-        cout << endl;
+        *filePos << endl;
     }
+
+    delete filePos;
 }

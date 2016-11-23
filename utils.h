@@ -65,8 +65,10 @@ struct Parameters {
     long timeCalcCorrel;  // Iterations between computations of correlations
 
     bool outputMobility, outputCorrel;  // Output mobility / correlations
+    long outputPosIters;  // Output positions every given number of iterations
     std::string path;  // Directory to store the results
     std::string fnameMobility, fnameCorrel;  // Filenames for mobility / correl
+    std::string fnamePos; // Filename (without extension) for positions
 
     bool gzip;  // Compress the output using gzip
     bool verbose;  // Verbose mode
