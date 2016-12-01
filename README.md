@@ -73,7 +73,7 @@ following arguments:
 
 ### Optional arguments
 * `--thermalization` Number of iterations of thermalization (i.e. without
-external force and withour recording any result) (`default=0`)
+recording any observable) (`default=0`)
 * `--resolution` Resolution for the correlations (`default=0.25`)
 * `--path` Directory in which the files are saved (`default=Results/`)
 * `--fileMobility` (resp. `--fileCorrel`) File name (without directory)
