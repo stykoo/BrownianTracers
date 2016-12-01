@@ -121,6 +121,11 @@ int runSimulation(const Parameters &p) {
         calcForcesBetweenParticles(positions, forces, p.nbParticles,
                                    boxLength, subBoxLength, nbSubBoxesLine,
                                    nbSubBoxes, nbrLists);
+
+        // Force on the tracers (along the first coordinate)
+        for (long i = 0 ; i < p.nbTracers ; i++)
+            positions[i][0] += p.timestep * p.force;
+
         // Add forces, noise and enforce periodic boundary conditions
         for (long i = 0 ; i < p.nbParticles ; i++) {
             for (int a = 0 ; a < DIM ; a++) {
