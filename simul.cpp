@@ -495,8 +495,10 @@ void genFileNames(const Parameters &p, string &fnameMobility,
     ostringstream oss;
     oss << "BT" << DIM << "d-";
 
-    std::time_t t = std::time(nullptr);
-    oss << std::put_time(std::localtime(&t), "%Y%m%d-%H%M%S") << "-";
+    char buf[50];
+    time_t t = time(nullptr);
+    strftime(buf, 50, "%Y%m%d-%H%M%S", localtime(&t));
+    oss << buf << "-";
 
     const char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz";
