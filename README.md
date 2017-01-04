@@ -42,7 +42,7 @@ dependancies are met), three executable files are created:
 visualization of the system
 * `brownianTracers-3d` for simulations in dimension 3
 
-At the `Makefile` level, this behavior is enable by compilation flags:
+At the `Makefile` level, this behavior is enabled by compilation flags:
 * `-DDIM=d` (with `d` any striclty positive integer) is a mandatory flag
 to indicate the dimension of the system
 * `-DVISU2D` is an optional flag that enables visualization in dimension 2.
@@ -65,8 +65,8 @@ unit size)
 * `--iters` Number of iterations of the simulation
 
 ### Export
-If visualization is disabled, it is mandatory to provide at least one of the
-following arguments:
+If the visualization is disabled, it is mandatory to provide at least one of
+the following arguments:
 * `--mobility` Export data for mobility
 * `--correl` Export data for correlations
 * `--livepos` Export positions every given number of iterations 
